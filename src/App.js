@@ -48,11 +48,11 @@ class App extends Component{
   }
   launchYear = e => {
     e.preventDefault();
-    var launchYear= e.target.innerText;
+    var launchYearValue= e.target.innerText;
     fetch('https://api.spaceXdata.com/v3/launches?limit=100')
   .then(response => response.json())
   .then(data => {this.setState({launchYear:data})});
-    var dataApi = this.state.launchYear.filter(item => {return (item.launch_year === launchYear )});
+    var dataApi = this.state.launchYear.filter(item => {return (item.launch_year === launchYearValue )});
     this.setState({data:dataApi})
   }
   render(){
@@ -62,53 +62,53 @@ class App extends Component{
       <Row className="show-grid">
         <Col md={2} className="Filter">
         <Col>
-        <p><b>Filters</b></p>
-        <p style={{textAlign:"center"}}>Launch Year</p>
-        <hr/>
+        <p className="FiltersTitle"><strong>Filters</strong></p>
+        <div className="FilterHeaders"><span>Launch Year</span></div>
         <div>
-        {this.state.years.map(item => {
+        {this.state.years.map((item,i) => {
           return (
-            <Col md={4} className="FilterYear">
-            <Button variant="primary" onClick={this.launchYear}>{item}</Button>
+            <Col md={5} className="FilterYear">
+            <div key={i}>
+            <Button className="YearButton" onClick={this.launchYear} >{item}</Button>
+            </div>
             </Col>
             )})}
         </div>
-        <br/>
         </Col>
     
         <Col md={12}>
         <br/>
-        <div><p style={{textAlign:"center"}}>Successful Launch</p>
-        <hr/></div>
-        
+        <div className="FilterHeaders"><span>Successful Launch</span></div>
         <div>
-        <Col md={4} className="FilterYear"><Button variant="primary" onClick={this.launch}>True</Button></Col>
-        <Col md={4} className="FilterYear"><Button variant="outline-primary" onClick={this.launch}>False</Button></Col>
+        <Col md={5} className="FilterYear"><Button className="YearButton" onClick={this.launch}>True</Button></Col>
+        <Col md={5} className="FilterYear"><Button className="YearButton" onClick={this.launch}>False</Button></Col>
         </div>
         </Col>
         <Col md={12}>
-        <p style={{textAlign:"center"}}>Successful Landing</p>
-        <hr/>
+        <br/>
+        <div className="FilterHeaders"><span>Successful Landing</span></div>
         <div>
-        <Col md={4} className="FilterYear"><Button variant="primary" onClick={this.land}>True</Button></Col>
-        <Col md={4} className="FilterYear"><Button variant="outline-primary" onClick={this.land}>False</Button></Col>
+        <Col md={5} className="FilterYear"><Button className="YearButton" onClick={this.land}>True</Button></Col>
+        <Col md={5} className="FilterYear"><Button className="YearButton" onClick={this.land}>False</Button></Col>
         </div>
         </Col>
         </Col>
         <Col md={9}>
-        {this.state.data.length !== 0 ? this.state.data.map(item =>{
+        {this.state.data.length !== 0 ? this.state.data.map((item,index) =>{
         return(
-        <Col md={2} className="Filter">
+        <Col md={3} className="FilterData">
+        <div key={index}>
         
         <img 
       src={item.links.mission_patch_small}
-      alt="new"
+      alt="aircraftImage"
       />
-          <div style={{color:"blue",fontWeight:"bold"}}>{item.mission_name} # {item.flight_number}</div>
-          <div><b>Mission Ids: </b><span style={{color:"#6495ED"}}>{item.mission_id}</span></div>
-          <div><b>Launch Year: </b><span style={{color:"#6495ED"}}>{item.launch_year}</span></div>
-          <div><b>Successful Launch: </b><span style ={{color:"#6495ED"}}>{item.launch_success === false ? "false" : "true"}</span></div>
-          <div><b>Successful Landing: </b><span style={{color:"#6495ED"}}>{item.land_success === false ? "false" : "true"}</span></div>
+          <div className= "MissionName">{item.mission_name} # {item.flight_number}</div>
+          <div><strong>Mission Ids: </strong><span style={{color:"#5e66a4"}}>{item.mission_id.length === 0 ? <ul><li>no mission id</li></ul> : <ul><li>{item.mission_id}</li></ul>}</span></div>
+          <div style={{marginBottom:"5px"}}><strong>Launch Year: </strong><span style={{color:"#5e66a4", paddingLeft:"30px"}}>{item.launch_year}</span></div>
+          <div style={{marginBottom:"5px"}}><strong>Successful </strong><span style ={{paddingLeft:"50px", color:"#5e66a4"}}>{item.launch_success === false ? "False" : "True"}</span> <br /> <strong>Launch:</strong></div>
+          <div style={{marginBottom:"20px"}}><strong>Successful </strong><span style={{paddingLeft:"50px", color:"#5e66a4"}}>{item.land_success === false ? "False" : "True"}</span><br /> <strong>Landing:</strong></div>
+          </div>
         </Col>
         )})
         : ""
